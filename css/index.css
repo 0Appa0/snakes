@@ -11,9 +11,73 @@ body .dice-container.active {
   height: 100%;
   width: 100%;
   top: 0%;
-  right: 0%;
-  opacity: 0.2;
-  background-color: lightgray;
+  background-color: rgba(245, 245, 245, 0.5);
+  display: block !important;
+}
+
+body .dice-container.active .dice {
+  position: absolute;
+  top: 44%;
+  right: 47%;
+  padding: 25px 30px;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  opacity: 1;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-shadow: 3px 4px 9px 7px rgba(0, 0, 0, 0.74);
+  box-shadow: 3px 4px 9px 7px rgba(0, 0, 0, 0.74);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+body .dice-container.active .dice.rolling {
+  -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  25% {
+    -webkit-transform: rotate3d(1, 0, 1, 90deg);
+            transform: rotate3d(1, 0, 1, 90deg);
+  }
+  50% {
+    -webkit-transform: rotate3d(0, 1, 0, 180deg);
+            transform: rotate3d(0, 1, 0, 180deg);
+  }
+  75% {
+    -webkit-transform: rotate3d(0, 0, 1, 270deg);
+            transform: rotate3d(0, 0, 1, 270deg);
+  }
+  100% {
+    -webkit-transform: rotate3d(1, 1, 1, 360deg);
+            transform: rotate3d(1, 1, 1, 360deg);
+  }
+}
+
+@keyframes spin {
+  25% {
+    -webkit-transform: rotate3d(1, 0, 1, 90deg);
+            transform: rotate3d(1, 0, 1, 90deg);
+  }
+  50% {
+    -webkit-transform: rotate3d(0, 1, 0, 180deg);
+            transform: rotate3d(0, 1, 0, 180deg);
+  }
+  75% {
+    -webkit-transform: rotate3d(0, 0, 1, 270deg);
+            transform: rotate3d(0, 0, 1, 270deg);
+  }
+  100% {
+    -webkit-transform: rotate3d(1, 1, 1, 360deg);
+            transform: rotate3d(1, 1, 1, 360deg);
+  }
 }
 
 body .dice-container {
@@ -120,6 +184,95 @@ body .board .cell {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  text-align: center;
+}
+
+body .board .cell .player-1 {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: red;
+  text-align: center;
+  position: absolute;
+  top: 13%;
+  right: 32%;
+}
+
+body .board .cell .player-1::after {
+  content: '';
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: -55%;
+  left: 95%;
+  background-color: red;
+}
+
+body .board .cell .player-2 {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: blue;
+  text-align: center;
+  position: absolute;
+  top: 13%;
+  right: 32%;
+}
+
+body .board .cell .player-2::after {
+  content: '';
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: -55%;
+  left: 65%;
+  background-color: blue;
+}
+
+body .board .cell .player-3 {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: green;
+  text-align: center;
+  position: absolute;
+  top: 13%;
+  right: 32%;
+}
+
+body .board .cell .player-3::after {
+  content: '';
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  position: absolute;
+  background-color: green;
+  top: -55%;
+  left: 35%;
+}
+
+body .board .cell .player-4 {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: orange;
+  text-align: center;
+  position: absolute;
+  top: 13%;
+  right: 32%;
+}
+
+body .board .cell .player-4::after {
+  content: '';
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  position: absolute;
+  background-color: orange;
+  top: -55%;
+  left: 5%;
 }
 
 body .board .cell:nth-child(odd) {
