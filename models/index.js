@@ -13,7 +13,6 @@ function board(params) {
   const playerCount = params['playerCount']
   const playerSelector = document.getElementById('player-board')
   playerSelector.classList.add('hidden')
-  // debugger
   initializeBoard(playerCount)
   initializePlayer(playerCount)
   initializeLadders()
@@ -138,7 +137,6 @@ function initializeSnake() {
   const line = document.createElement('canvas')
   line.classList.add('fixed-canvas')
   document.body.appendChild(line)
-  console.log(fixedSankeDimension, fixedSankeEndDimension, bodyDimension)
   const ctx = line.getContext('2d')
   ctx.moveTo(fixedSankeDimension.right/bodyDimension.width * 300 -(fixedSankeDimension.width/10), fixedSankeDimension.top/bodyDimension.height * 150 +(fixedSankeDimension.height/10)) ;    
   ctx.lineTo(fixedSankeEndDimension.right/bodyDimension.width * 300 -(fixedSankeEndDimension.width/10), fixedSankeEndDimension.top/bodyDimension.height * 150 +(fixedSankeEndDimension.height/10)) ;
@@ -164,7 +162,6 @@ function initializeFixedSnake() {
   const line = document.createElement('canvas')
   line.classList.add('fixed-canvas')
   document.body.appendChild(line)
-  console.log(fixedSankeDimension, fixedSankeEndDimension, bodyDimension)
   const ctx = line.getContext('2d')
   ctx.moveTo(fixedSankeDimension.right/bodyDimension.width * 300 -(fixedSankeDimension.width/10), fixedSankeDimension.top/bodyDimension.height * 150 +(fixedSankeDimension.height/10)) ;    
   ctx.lineTo(fixedSankeEndDimension.right/bodyDimension.width * 300 -(fixedSankeEndDimension.width/10), fixedSankeEndDimension.top/bodyDimension.height * 150 +(fixedSankeEndDimension.height/10)) ;
@@ -212,7 +209,6 @@ function initializeLadders() {
     const line = document.createElement('canvas')
     line.classList.add('fixed-canvas')
     document.body.appendChild(line)
-    console.log(elem1Dimension, elem2Dimension, bodyDimension)
     const ctx = line.getContext('2d')
     ctx.moveTo(elem1Dimension.right/bodyDimension.width * 300 -(elem1Dimension.width/10), elem1Dimension.top/bodyDimension.height * 150 +(elem1Dimension.height/10)) ;    
     ctx.lineTo(elem2Dimension.right/bodyDimension.width * 300 -(elem2Dimension.width/10), elem2Dimension.top/bodyDimension.height * 150 +(elem2Dimension.height/10)) ;
