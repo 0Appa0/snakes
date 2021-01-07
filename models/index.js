@@ -13,18 +13,28 @@ function board(params) {
   const playerCount = params['playerCount']
   const playerSelector = document.getElementById('player-board')
   playerSelector.classList.add('hidden')
-  // debugger
   initializeBoard(playerCount)
-  // initializeSnake()
+  initializePlayer(playerCount)
   initializeLadders()
+  initializeFixedSnake()
+  initializeSnake()
   // initializeGame()
   initializeDice()
 }
 
+function initializePlayer(playerCount) {
+  for (let i=1; i<=playerCount; i++) {
+    let playerElement = document.createElement('p')
+    playerElement.classList.add(`player-${i}`)
+    const cellPosition = document.getElementById('c-1')
+    cellPosition.appendChild(playerElement)
+  }
+}
 
 function initializeBoard(playerCount) {
   let board = document.createElement('div')
   board.classList.add('board')
+  board.setAttribute('id', 'sanke-board')
   board.setAttribute('player-count', playerCount)
   let gridCount = 1 
 
@@ -56,38 +66,156 @@ function initializeBoard(playerCount) {
 // initialize Board //
 
 function initializeDice() {
+  Math.floor(Math.random() * 6) + 1  
+
   let diceContainer = document.createElement('div')
   diceContainer.classList.add('dice-container')
   diceContainer.classList.add('active')
 
-  let dice = document.createElement('div')
+  let dice = document.createElement('p')
+  dice.innerText = 1
+  dice.classList.add('dice')
+  diceContainer.appendChild(dice)
+
+  dice.addEventListener('click', function(event) {
+    event.target.innerText = ''
+    event.target.innerHtml = ''
+    event.target.classList.add('rolling')
+
+    let diceValue = Math.floor(Math.random() * 6 ) + 1
+    event.target.innerText = diceValue
+    let audio = new Audio('https://soundbible.com//mp3/Redneck%20Rolls%20Dice-SoundBible.com-1100715950.mp3')
+    audio.play()
+
+    setTimeout(function() {
+      event.target.classList.remove('rolling')
+      diceContainer.classList.remove('active')
+      event.target.innerText = diceValue
+      audio.pause()
+    }, 2700)
+  })
 
   document.body.appendChild(diceContainer)
 
-
 }
+
 function initializeSnake() {
+ for(let i=8;i>3;i--) {
+  let cellS = Math.floor(Math.random() * 17) + (i*10)
+  let fixedSanke = document.getElementById(`c-${cellS}`)
 
-}
+  while (fixedSanke.getAttribute('ladder-start') === "true" || fixedSanke.getAttribute('snake-start') === "true") {
+    cellS = cellS + (Math.floor(Math.random() * 10 ) + 1)
+    fixedSanke = document.getElementById(`c-${cellS}`)
+  }
 
-function initializeLadders() {
-  const element1 = document.getElementById('c-100')
-  const element2 = document.getElementById('c-1')
-  const elem1Dimension = getOffset(element1)
-  const elem2Dimension = getOffset(element2)
+  let cellE = cellS - 10*(Math.floor(Math.random() * 5 ) + 3) - (Math.floor(Math.random() * 9 ) + 1)
+  while (cellE < 1) {
+    cellE = Number(cellE + 5)
+  }
+  let fixedSankeEnd = document.getElementById(`c-${cellE}`)
+
+  while (fixedSankeEnd.getAttribute('ladder-start') === "true" || fixedSankeEnd.getAttribute('snake-start') === "true") {
+    cellE = cellE + (Math.floor(Math.random() * 10 ) + 1)
+      while (cellE < 1) {
+        cellE = Number(cellE + 5)
+      }
+    fixedSankeEnd = document.getElementById(`c-${cellE}`)
+  }
+
+  
+
+  fixedSanke.setAttribute('snake-start', true)
+  fixedSanke.setAttribute('end-position', fixedSankeEnd.getAttribute('id'))
+  fixedSankeEnd.setAttribute('snake-start', true)
+
+  let fixedSankeDimension = getOffset(fixedSanke)
+  let fixedSankeEndDimension = getOffset(fixedSankeEnd)
   const bodyDimension = getDocumentHeghtWidth()
 
-  element2.setAttribute('ladder-start', true)
-  element2.setAttribute('end-position', 'c-33')
 
   const line = document.createElement('canvas')
   line.classList.add('fixed-canvas')
   document.body.appendChild(line)
-  console.log(elem1Dimension, elem2Dimension, bodyDimension)
   const ctx = line.getContext('2d')
-  ctx.moveTo(65, 55);    
-  ctx.lineTo(150, 200);
+  ctx.moveTo(fixedSankeDimension.right/bodyDimension.width * 300 -(fixedSankeDimension.width/10), fixedSankeDimension.top/bodyDimension.height * 150 +(fixedSankeDimension.height/10)) ;    
+  ctx.lineTo(fixedSankeEndDimension.right/bodyDimension.width * 300 -(fixedSankeEndDimension.width/10), fixedSankeEndDimension.top/bodyDimension.height * 150 +(fixedSankeEndDimension.height/10)) ;
+  ctx.strokeStyle = '#FF0000';
+  ctx.lineWidth = 1
   ctx.stroke();
+ }
+}
+
+function initializeFixedSnake() {
+  let fixedSanke = document.getElementById(`c-98`)
+  let fixedSankeEnd = document.getElementById('c-2')
+
+  fixedSanke.setAttribute('snake-start', true)
+  fixedSanke.setAttribute('end-position', 'c-2')
+  fixedSankeEnd.setAttribute('snake-start', true)
+
+  let fixedSankeDimension = getOffset(fixedSanke)
+  let fixedSankeEndDimension = getOffset(fixedSankeEnd)
+  const bodyDimension = getDocumentHeghtWidth()
+
+
+  const line = document.createElement('canvas')
+  line.classList.add('fixed-canvas')
+  document.body.appendChild(line)
+  const ctx = line.getContext('2d')
+  ctx.moveTo(fixedSankeDimension.right/bodyDimension.width * 300 -(fixedSankeDimension.width/10), fixedSankeDimension.top/bodyDimension.height * 150 +(fixedSankeDimension.height/10)) ;    
+  ctx.lineTo(fixedSankeEndDimension.right/bodyDimension.width * 300 -(fixedSankeEndDimension.width/10), fixedSankeEndDimension.top/bodyDimension.height * 150 +(fixedSankeEndDimension.height/10)) ;
+  ctx.strokeStyle = '#FF0000';
+  ctx.lineWidth = 1
+  ctx.stroke();
+
+}
+
+function initializeLadders() {
+  for (let i=0;i<6;i++) {
+    let cellS = Math.floor(Math.random() * ( i*10 + 20 )) + 2
+
+    let element1 = document.getElementById(`c-${cellS}`)
+
+    while (element1.getAttribute('ladder-start') === "true") {
+      cellS = cellS + (Math.floor(Math.random() * 10 ) + 1)
+      element1 = document.getElementById(`c-${cellS}`)
+    }
+
+    let cellE = cellS + 10*(Math.floor(Math.random() * 5 ) + 1) + (Math.floor(Math.random() * 9 ) + 1)
+
+    
+    while (cellE >= 100) {
+      cellE = Number(cellE - 10)
+    }
+    let element2 = document.getElementById(`c-${cellE}`)
+
+    while (element2.getAttribute('ladder-start') === "true") {
+      cellE = cellE + (Math.floor(Math.random() * 10 ) + 1)
+      while (cellE >= 100) {
+        cellE = Number(cellE - 10)
+      }
+      element2 = document.getElementById(`c-${cellE}`)
+    }
+
+    const elem1Dimension = getOffset(element1)
+    const elem2Dimension = getOffset(element2)
+    const bodyDimension = getDocumentHeghtWidth()
+
+    element1.setAttribute('ladder-start', true)
+    element1.setAttribute('end-position', element2.getAttribute('id'))
+    element2.setAttribute('ladder-start', true)
+
+    const line = document.createElement('canvas')
+    line.classList.add('fixed-canvas')
+    document.body.appendChild(line)
+    const ctx = line.getContext('2d')
+    ctx.moveTo(elem1Dimension.right/bodyDimension.width * 300 -(elem1Dimension.width/10), elem1Dimension.top/bodyDimension.height * 150 +(elem1Dimension.height/10)) ;    
+    ctx.lineTo(elem2Dimension.right/bodyDimension.width * 300 -(elem2Dimension.width/10), elem2Dimension.top/bodyDimension.height * 150 +(elem2Dimension.height/10)) ;
+    ctx.strokeStyle = '#00FF00';
+    ctx.lineWidth = 2
+    ctx.stroke();
+  }
 }
 
 function getOffset(el) {
