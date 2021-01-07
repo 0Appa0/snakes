@@ -18,7 +18,6 @@ function board(params) {
   initializeLadders()
   initializeFixedSnake()
   initializeSnake()
-  // initializeGame()
   initializeDice()
 }
 
@@ -26,7 +25,9 @@ function initializePlayer(playerCount) {
   for (let i=1; i<=playerCount; i++) {
     let playerElement = document.createElement('p')
     playerElement.classList.add(`player-${i}`)
-    const cellPosition = document.getElementById('c-1')
+    playerElement.setAttribute('id', `player-${i}`)
+    playerElement.setAttribute(`current-position`, 1)
+    const cellPosition = document.getElementById(`c-1`)
     cellPosition.appendChild(playerElement)
   }
 }
@@ -34,8 +35,9 @@ function initializePlayer(playerCount) {
 function initializeBoard(playerCount) {
   let board = document.createElement('div')
   board.classList.add('board')
-  board.setAttribute('id', 'sanke-board')
+  board.setAttribute('id', 'snake-board')
   board.setAttribute('player-count', playerCount)
+  board.setAttribute('current-player', 1)
   let gridCount = 1 
 
   for (let n=1;n<=10;n++) {
@@ -91,12 +93,62 @@ function initializeDice() {
       event.target.classList.remove('rolling')
       diceContainer.classList.remove('active')
       event.target.innerText = diceValue
+      const board = document.getElementById('snake-board')
       audio.pause()
-    }, 2700)
+      const playerNumber = Number(board.getAttribute('current-player')) % Number(board.getAttribute('player-count')) || Number(board.getAttribute('player-count'))
+      console.log(playerNumber)
+
+      const currentPlayer = document.getElementById(`player-${playerNumber}`)
+      let newCellPosition = document.getElementById(`c-${diceValue + Number(currentPlayer.getAttribute('current-position'))}`)
+      
+      if (Number(diceValue) !== 6) {
+        board.setAttribute('current-player', Number(board.getAttribute('current-player') ) + 1)
+      }
+
+      if (newCellPosition.getAttribute('ladder-start') === 'true' && newCellPosition.getAttribute('end-position')) {
+        newCellPosition = document.getElementById(`${newCellPosition.getAttribute('end-position')}`)
+      }
+
+      if(newCellPosition.getAttribute('snake-start') &&  newCellPosition.getAttribute('end-position')) {
+        newCellPosition = document.getElementById(`${newCellPosition.getAttribute('end-position')}`)
+      }
+
+      currentPlayer.parentElement.removeChild(currentPlayer)
+      const newCurrentPlayer = document.createElement('p')
+      newCurrentPlayer.classList.add(`player-${playerNumber}`)
+      newCurrentPlayer.setAttribute('id', `player-${playerNumber}`)
+      newCurrentPlayer.setAttribute('current-position', Number(newCellPosition.getAttribute('id').split('-')[1]))
+      newCellPosition.appendChild(newCurrentPlayer)
+
+      eliminateAllPlayer(newCellPosition, playerNumber)
+    }, 1000)
+
+    setTimeout(function() {
+      diceContainer.classList.add('active')
+    }, 1200)
   })
 
   document.body.appendChild(diceContainer)
 
+}
+
+function eliminateAllPlayer(el, param) {
+  const playerArray = [1,2,3,4]
+  console.log(playerArray.filter(item=> Number(item) !== Number(item)))
+  playerArray.filter(item=> item !== param).forEach(item => {
+    const elimatingElement = el.getElementsByClassName(`player-${item}`)[0]
+    console.log(elimatingElement)
+    if (elimatingElement)
+      {
+        elimatingElement.parentElement.removeChild(elimatingElement)
+        let playerElement = document.createElement('p')
+        playerElement.classList.add(`player-${item}`)
+        playerElement.setAttribute('id', `player-${item}`)
+        playerElement.setAttribute(`current-position`, 1)
+        const cellPosition = document.getElementById(`c-1`)
+        cellPosition.appendChild(playerElement)
+      }
+  })
 }
 
 function initializeSnake() {
@@ -173,7 +225,7 @@ function initializeFixedSnake() {
 
 function initializeLadders() {
   for (let i=0;i<6;i++) {
-    let cellS = Math.floor(Math.random() * ( i*10 + 20 )) + 2
+    let cellS = Math.floor(Math.random() * ( i*10 + 20 )) + (2 + i*3)
 
     let element1 = document.getElementById(`c-${cellS}`)
 
